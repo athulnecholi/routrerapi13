@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-function App() {
+const Home = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetch("https://fakestoreapi.com/products")
+      .then((res) => res.json())
+      .then((data) => setProducts(data));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Products</h1>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
+        {products.map((product) => (
+          <div key={product.id} style={{ border: "1px solid #ccc", padding: "10px" }}>
+            <img src={product.image} alt={product.title} style={{ width: "100px" }} />
+            <h3>{product.title}</h3>
+            <p>${product.price}</p>
+            <Link to={`/product/${product.id}`}>View Details</Link>
+          </div>
+        ))}
+      </div>
     </div>
   );
-}
+};
 
-export default App;
+export default Home;
